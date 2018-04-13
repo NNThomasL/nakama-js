@@ -13,6 +13,11 @@ export interface CreateGroupsRequestNewGroup {
     name?: string;
     private?: boolean;
 }
+export interface WriteLeaderboardRecordRequestLeaderboardRecordWrite {
+    metadata?: string;
+    score?: string;
+    subscore?: string;
+}
 export interface ApiAccount {
     custom_id?: string;
     devices?: Array<ApiAccountDevice>;
@@ -81,6 +86,25 @@ export interface ApiGroup {
 }
 export interface ApiGroups {
     groups?: Array<ApiGroup>;
+}
+export interface ApiLeaderboardRecord {
+    create_time?: string;
+    expiry_time?: string;
+    leaderboard_id?: string;
+    metadata?: string;
+    num_score?: number;
+    owner_id?: string;
+    rank?: string;
+    score?: string;
+    subscore?: string;
+    update_time?: string;
+    username?: string;
+}
+export interface ApiLeaderboardRecordList {
+    next_cursor?: string;
+    owner_records?: Array<ApiLeaderboardRecord>;
+    prev_cursor?: string;
+    records?: Array<ApiLeaderboardRecord>;
 }
 export interface ApiMatch {
     authoritative?: boolean;
@@ -231,6 +255,9 @@ export declare const NakamaApi: (configuration?: ConfigurationParameters) => {
     blockFriends(options?: any): Promise<ProtobufEmpty>;
     importFacebookFriends(body: ApiAccountFacebook, options?: any): Promise<ProtobufEmpty>;
     createGroup(body: ApiCreateGroupsRequest, options?: any): Promise<ApiGroups>;
+    deleteLeaderboardRecord(leaderboardId: string, options?: any): Promise<ProtobufEmpty>;
+    listLeaderboardRecords(leaderboardId: string, ownerIds?: string[] | undefined, limit?: number | undefined, cursor?: string | undefined, options?: any): Promise<ApiLeaderboardRecordList>;
+    writeLeaderboardRecord(leaderboardId: string, body: WriteLeaderboardRecordRequestLeaderboardRecordWrite, options?: any): Promise<ApiLeaderboardRecord>;
     listMatches(limit?: number | undefined, authoritative?: boolean | undefined, label?: string | undefined, minSize?: number | undefined, maxSize?: number | undefined, options?: any): Promise<ApiMatchList>;
     deleteNotifications(options?: any): Promise<ProtobufEmpty>;
     listNotifications(limit?: number | undefined, cacheableCursor?: string | undefined, options?: any): Promise<ApiNotificationList>;

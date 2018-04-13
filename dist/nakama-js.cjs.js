@@ -2016,6 +2016,158 @@ var NakamaApi = function (configuration) {
                 }),
             ]);
         },
+        deleteLeaderboardRecord: function (leaderboardId, options) {
+            if (options === void 0) { options = {}; }
+            if (leaderboardId === null || leaderboardId === undefined) {
+                throw new Error("'leaderboardId' is a required parameter but is null or undefined.");
+            }
+            var urlPath = "/v2/leaderboard/{leaderboard_id}"
+                .replace("{leaderboard_id}", encodeURIComponent(String(leaderboardId)));
+            var queryParams = {};
+            var urlQuery = "?" + Object.keys(queryParams)
+                .map(function (k) {
+                if (queryParams[k] instanceof Array) {
+                    return queryParams[k].reduce(function (prev, curr) {
+                        return prev + encodeURIComponent(k) + "=" + encodeURIComponent(curr) + "&";
+                    }, "");
+                }
+                else {
+                    if (queryParams[k] != null) {
+                        return encodeURIComponent(k) + "=" + encodeURIComponent(queryParams[k]) + "&";
+                    }
+                }
+            })
+                .join("");
+            var fetchOptions = __assign({ method: "DELETE" }, options);
+            var headers = {
+                "Accept": "application/json",
+                "Content-Type": "application/json",
+            };
+            if (configuration.bearerToken) {
+                headers["Authorization"] = "Bearer " + configuration.bearerToken;
+            }
+            else if (configuration.username) {
+                headers["Authorization"] = "Basic " + btoa(configuration.username + ":" + configuration.password);
+            }
+            fetchOptions.headers = __assign({}, headers, options.headers);
+            return Promise.race([
+                fetch(configuration.basePath + urlPath + urlQuery, fetchOptions).then(function (response) {
+                    if (response.status >= 200 && response.status < 300) {
+                        return response.json();
+                    }
+                    else {
+                        throw response;
+                    }
+                }),
+                new Promise(function (_, reject) {
+                    return setTimeout(reject, configuration.timeoutMs, "Request timed out.");
+                }),
+            ]);
+        },
+        listLeaderboardRecords: function (leaderboardId, ownerIds, limit, cursor, options) {
+            if (options === void 0) { options = {}; }
+            if (leaderboardId === null || leaderboardId === undefined) {
+                throw new Error("'leaderboardId' is a required parameter but is null or undefined.");
+            }
+            var urlPath = "/v2/leaderboard/{leaderboard_id}"
+                .replace("{leaderboard_id}", encodeURIComponent(String(leaderboardId)));
+            var queryParams = {
+                owner_ids: ownerIds,
+                limit: limit,
+                cursor: cursor,
+            };
+            var urlQuery = "?" + Object.keys(queryParams)
+                .map(function (k) {
+                if (queryParams[k] instanceof Array) {
+                    return queryParams[k].reduce(function (prev, curr) {
+                        return prev + encodeURIComponent(k) + "=" + encodeURIComponent(curr) + "&";
+                    }, "");
+                }
+                else {
+                    if (queryParams[k] != null) {
+                        return encodeURIComponent(k) + "=" + encodeURIComponent(queryParams[k]) + "&";
+                    }
+                }
+            })
+                .join("");
+            var fetchOptions = __assign({ method: "GET" }, options);
+            var headers = {
+                "Accept": "application/json",
+                "Content-Type": "application/json",
+            };
+            if (configuration.bearerToken) {
+                headers["Authorization"] = "Bearer " + configuration.bearerToken;
+            }
+            else if (configuration.username) {
+                headers["Authorization"] = "Basic " + btoa(configuration.username + ":" + configuration.password);
+            }
+            fetchOptions.headers = __assign({}, headers, options.headers);
+            return Promise.race([
+                fetch(configuration.basePath + urlPath + urlQuery, fetchOptions).then(function (response) {
+                    if (response.status >= 200 && response.status < 300) {
+                        return response.json();
+                    }
+                    else {
+                        throw response;
+                    }
+                }),
+                new Promise(function (_, reject) {
+                    return setTimeout(reject, configuration.timeoutMs, "Request timed out.");
+                }),
+            ]);
+        },
+        writeLeaderboardRecord: function (leaderboardId, body, options) {
+            if (options === void 0) { options = {}; }
+            if (leaderboardId === null || leaderboardId === undefined) {
+                throw new Error("'leaderboardId' is a required parameter but is null or undefined.");
+            }
+            if (body === null || body === undefined) {
+                throw new Error("'body' is a required parameter but is null or undefined.");
+            }
+            var urlPath = "/v2/leaderboard/{leaderboard_id}"
+                .replace("{leaderboard_id}", encodeURIComponent(String(leaderboardId)));
+            var queryParams = {};
+            var urlQuery = "?" + Object.keys(queryParams)
+                .map(function (k) {
+                if (queryParams[k] instanceof Array) {
+                    return queryParams[k].reduce(function (prev, curr) {
+                        return prev + encodeURIComponent(k) + "=" + encodeURIComponent(curr) + "&";
+                    }, "");
+                }
+                else {
+                    if (queryParams[k] != null) {
+                        return encodeURIComponent(k) + "=" + encodeURIComponent(queryParams[k]) + "&";
+                    }
+                }
+            })
+                .join("");
+            var fetchOptions = __assign({ method: "POST" }, options);
+            var headers = {
+                "Accept": "application/json",
+                "Content-Type": "application/json",
+            };
+            if (configuration.bearerToken) {
+                headers["Authorization"] = "Bearer " + configuration.bearerToken;
+            }
+            else if (configuration.username) {
+                headers["Authorization"] = "Basic " + btoa(configuration.username + ":" + configuration.password);
+            }
+            fetchOptions.headers = __assign({}, headers, options.headers);
+            fetchOptions.body = JSON.stringify(body || {});
+            return Promise.race([
+                fetch(configuration.basePath + urlPath + urlQuery, fetchOptions).then(function (response) {
+                    if (response.status >= 200 && response.status < 300) {
+                        return response.json();
+                    }
+                    else {
+                        throw response;
+                    }
+                }),
+                new Promise(function (_, reject) {
+                    return setTimeout(reject, configuration.timeoutMs, "Request timed out.");
+                }),
+            ]);
+        },
         listMatches: function (limit, authoritative, label, minSize, maxSize, options) {
             if (options === void 0) { options = {}; }
             var urlPath = "/v2/match";
@@ -2853,6 +3005,50 @@ var Client = (function () {
         this.configuration.bearerToken = (session && session.token);
         return this.apiClient.listFriends();
     };
+    Client.prototype.listLeaderboardRecords = function (session, leaderboardId, ownerIds, limit, cursor) {
+        this.configuration.bearerToken = (session && session.token);
+        return this.apiClient.listLeaderboardRecords(leaderboardId, ownerIds, limit, cursor).then(function (response) {
+            var list = {
+                next_cursor: response.next_cursor,
+                prev_cursor: response.prev_cursor,
+                owner_records: [],
+                records: []
+            };
+            if (response.owner_records != null) {
+                response.owner_records.forEach(function (o) {
+                    list.owner_records.push({
+                        expiry_time: o.expiry_time,
+                        leaderboard_id: o.leaderboard_id,
+                        metadata: o.metadata ? JSON.parse(o.metadata) : undefined,
+                        num_score: o.num_score,
+                        owner_id: o.owner_id,
+                        rank: Number(o.rank),
+                        score: Number(o.score),
+                        subscore: Number(o.subscore),
+                        update_time: o.update_time,
+                        username: o.username
+                    });
+                });
+            }
+            if (response.records != null) {
+                response.records.forEach(function (o) {
+                    list.records.push({
+                        expiry_time: o.expiry_time,
+                        leaderboard_id: o.leaderboard_id,
+                        metadata: o.metadata ? JSON.parse(o.metadata) : undefined,
+                        num_score: o.num_score,
+                        owner_id: o.owner_id,
+                        rank: Number(o.rank),
+                        score: Number(o.score),
+                        subscore: Number(o.subscore),
+                        update_time: o.update_time,
+                        username: o.username
+                    });
+                });
+            }
+            return Promise.resolve(list);
+        });
+    };
     Client.prototype.listMatches = function (session, limit, authoritative, label, minSize, maxSize) {
         this.configuration.bearerToken = (session && session.token);
         return this.apiClient.listMatches(limit, authoritative, label, minSize, maxSize);
@@ -2974,6 +3170,26 @@ var Client = (function () {
         this.configuration.bearerToken = (session && session.token);
         return this.apiClient.updateAccount(request).then(function (response) {
             return response !== undefined;
+        });
+    };
+    Client.prototype.writeLeaderboardRecord = function (session, leaderboardId, request) {
+        this.configuration.bearerToken = (session && session.token);
+        return this.apiClient.writeLeaderboardRecord(leaderboardId, {
+            metadata: request.metadata ? JSON.stringify(request.metadata) : undefined,
+            score: request.score,
+            subscore: request.subscore
+        }).then(function (response) {
+            return Promise.resolve({
+                expiry_time: response.expiry_time,
+                leaderboard_id: response.leaderboard_id,
+                metadata: response.metadata ? JSON.parse(response.metadata) : undefined,
+                num_score: response.num_score,
+                owner_id: response.owner_id,
+                score: Number(response.score),
+                subscore: Number(response.subscore),
+                update_time: response.update_time,
+                username: response.username
+            });
         });
     };
     Client.prototype.writeStorageObjects = function (session, objects) {
