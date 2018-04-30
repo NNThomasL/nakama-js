@@ -26,7 +26,7 @@
   "private": false,
   "dependencies": {
     "base-64": "^0.1.0",
-    "whatwg-fetch": "^2.0.3"
+    "cross-fetch": "^2.1.1"
   },
   "devDependencies": {
     "babel-core": "^6.26.0",

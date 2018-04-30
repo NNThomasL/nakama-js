@@ -15,7 +15,8 @@ export default [
     },
     "plugins": [
       resolve({
-        "main": true
+        "main": true,
+        "browser": true
       }),
       commonjs(),
       babel({
@@ -26,10 +27,10 @@ export default [
       rootImport({
         useEntry: 'prepend',
         extensions: '.js'
-      }),
+      })
     ],
     "moduleContext": {
-      [require.resolve('whatwg-fetch')]: 'window'
+      [require.resolve('cross-fetch/dist/browser-polyfill')]: 'window'
     }
   }, {
     // Build commonjs and ES modules.
@@ -56,10 +57,10 @@ export default [
       rootImport({
         useEntry: 'prepend',
         extensions: '.js'
-      }),
+      })
     ],
     "moduleContext": {
-      [require.resolve('whatwg-fetch')]: 'window'
+      [require.resolve('cross-fetch/dist/browser-polyfill')]: 'window'
     }
   }
 ];
